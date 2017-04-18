@@ -4,10 +4,39 @@
 	top: 0px;
 	width: 20%;
 	height: 100%;
+	background:white;
 }
 
 #minimap {
 	position: fixed;
 	right: 0px;
 	top: 0px;
+	width: 20%;
+	height: 33%;
+	background:white;
+}
+
+#view {
+	position: fixed;
+	left: 20%;
+	top: 0px;
+	width: 60%;
+	height: 33%;
+}
+
+description {
+	position: fixed;
+	top: 33%;
+	left: 20%;
+	text-indent: 5%;
+	width: 60%
+}
+
+prompt {
+	text-indent: 10%;
+	
+}
+
+choices {
+	text-indent: 15%;
 }
