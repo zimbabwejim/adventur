@@ -86,7 +86,7 @@ $(document).ready(function(){
 	    		console.log(optActions);
 	    		choice[i].innerHTML = opts[i];
 	    		console.log("choicing "+i);
-	    		var action = optActions[i];
+	    		let action = optActions[i];
 	    		choice[i].addEventListener("click", function(){doThings(action)});
 	    	}else{
 	    		choice[i].innerHTML = "";
