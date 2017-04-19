@@ -7,8 +7,6 @@ $(document).ready(function(){
     var mtx = mapDisplay.getContext("2d");
     var mw = $("#minimap").width();
     var mh = $("#minimap").height();
-    //var startButton = document.getElementById("startButton");
-    //startButton.addEventListener("click", function(){startGame()});
     ptx.fillStyle = "blue";
     ptx.fillRect(0, 0, pw, ph);
     mtx.fillStyle = "chartreuse";
@@ -16,7 +14,6 @@ $(document).ready(function(){
     var desc = $("#desc")[0];
     var prompt = $("#prompt")[0];
     var choice = [$("#choice1")[0],$("#choice2")[0],$("#choice3")[0],$("#choice4")[0],$("#choice5")[0],$("#choice6")[0]];
-
     var haveLegs = true;
     var haveKey = false;
     var customer = false;
@@ -28,9 +25,16 @@ $(document).ready(function(){
     var haveFlask = false;
     var owlAlive = true;
     var haveDoorknob = false;
-    var foundOwl = false;
-    var owlExt = false; //probs won't be used
-    // var optActions = [];
+    var owlFound = false;
+    var startGame = function(){
+    	//stuff
+    	doThings({target: {goto: 99}});
+    }
+
+    var restartGame = function(){
+    	//otherstuff
+    }
+
 	var doThings = function(input){
 		console.log("starting doThings with "+input.target.goto);
 		input = input.target.goto;
@@ -40,7 +44,7 @@ $(document).ready(function(){
 			case 99:
 				desc.innerHTML = "Ye are in a tavern";
 				prompt.innerHTML = "What do ye do?";
-				opts = ["Go to ye table","Go to ye man","Walk outside","Visit bar","Visit bathroom","Approach elevator"];
+				opts = ["Go to ye table","Go to ye man","Walk outside","Visit bar","Visit bathroom","Approach elevator"]; //probably remove visit bathroom
 				optActions = [1,2,3,4,10,29];
 				break;
 
@@ -275,6 +279,139 @@ $(document).ready(function(){
 				optActions = [24];
 				opts = ["Continue"];
 				break;
+			case 26:
+				desc.innerHTML = "Ye approach the statue.";
+				if (beefiness){
+					prompt.innerHTML = "Ye Beowulf statue likes ye shiny";
+					optActions = [24];
+				}else if (haveSword){
+					prompt.innerHTML = "Ye Beowulf statue takes ye sword and gives ye beefiness";
+					haveSword = false;
+					beefiness = true;
+					optActions = [24];
+				}else{
+					prompt.innerHTML = "Ye have nothing to offer and ye statue rips ye arm off.<br>Ye wake up in ye tavern with a robotic arm.";
+					optActions = [99];
+				}
+				opts = ["Continue"];
+				break;
+			case 27:
+				desc.innerHTML = "Ye inspect the chest.  It appears to be named Chesty.";
+				if (haveKey){
+					prompt.innerHTML = "Chesty eats ye key.<br>Chesty still be hungry and bites ye legs off.<br>Ye wake up in ye tavern in a wheelchair.";
+					haveKey = false;
+					haveLegs = false;
+					optActions = [99];
+				}else{
+					prompt.innerHTML = "Chesty be hungry.";
+					optActions = [20];
+				}
+				opts = ["Continue"];
+				break;
+			case 28:
+				desc.innerHTML = "Ye inspect the tree.";
+				if (haveDoorknob){
+					prompt.innerHTML = "Ye tree be empty.";
+				}else if (owlAlive){
+					prompt.innerHTML = "An owl hoots at ye demeaningly."
+					owlFound = true;
+				}else{
+					prompt.innerHTML = "Ye look in a hole in the tree and find a doorknob.";
+					haveDoorknob = true;
+				}
+				opts = ["Continue"];
+				optActions = [20];
+				break;
+			case 29:
+				desc.innerHTML = "Ye approach the elevator.";
+				prompt.innerHTML = "A man stands guard.";
+				opts = ["Inspect man","Use elevator","Go back"];
+				optActions = [30,31,99];
+				break;
+			case 30:
+				desc.innerHTML = "Ye inspect the man.";
+				prompt.innerHTML = "Ye man appears to be Dennis' twin brother Daryl.";
+				opts = ["Continue"];
+				optActions = [29];
+				break;
+			case 31:
+				desc.innerHTML = "Ye use the elevator.";
+				if (haveLegs){
+					prompt.innerHTML = "Daryl does not let ye pass.<br>Ye elevator be handicap only.";
+					optActions = [29];
+				}else{
+					prompt.innerHTML = "Ye ride the elevator upstairs";
+					optActions = [32];
+				}
+				opts = ["Continue"];
+				break;
+			case 32:
+				desc.innerHTML = "Ye walk out of the elevator.";
+				prompt.innerHTML = "Ye be upstairs.";
+				opts = ["Roll out window","Talk to men","Use door","Go back"];
+				optActions = [33,34,36,99];
+				break;
+			case 33:
+				desc.innerHTML = "Ye roll out the window.";
+				prompt.innerHTML = "Ye land outside.";
+				opts = ["Continue"];
+				optActions = [3];
+				break;
+			case 34://supposed to be walk up to men/talk to men
+				break;
+			case 35:
+				desc.innerHTML = "Ye talk to the men.";
+				if (!owlAlive){
+					prompt.innerHTML = "What men?";
+				}else if (owlAlive && owlFound){
+					prompt.innerHTML = "Ye tell the men of the owl.<br>Ye men rush off.";
+					owlAlive = false;
+				}else{
+					prompt.innerHTML = "Men: We're <i>owl</i> exterminators.<br>The men ignore ye.";
+				}
+				opts = ["Continue"];
+				optActions = [34];
+				break;
+			case 36:
+				desc.innerHTML = "Ye use the door.";
+				if (haveDoorknob){
+					prompt.innerHTML = "Ye put the knob on the door and fall through a trap door.";
+					optActions = [37];
+				}else{
+					prompt.innerHTML = "Ye door has no knob.";
+					optActions = [32];
+				}
+				opts = ["Continue"];
+				break;
+			case 37:
+				desc.innerHTML = "Ye fall through the trap door.";
+				prompt.innerHTML = "Ye in a room.";
+				opts = ["Talk to man","Use computer","Hit computer"];
+				optActions = [38,39,40];
+				break;
+			case 38:
+				desc.innerHTML = "Ye talk to the man.";
+				prompt.innerHTML = "Man: Ahaha ye fell for me trap.<br>Ye must finish my game to escape.";
+				opts = ["Continue"];
+				optActions = [37];
+				break;
+			case 39:
+				desc.innerHTML = "Ye use the computer.";
+				prompt.innerHTML = "Beep boop:";
+				opts = ["Start game","Log off"];
+				optActions = [41,37];
+				break;
+			case 40:
+				desc.innerHTML = "Ye hit the computer.";
+				prompt.innerHTML = "A frowny face appears on the screen.";
+				opts = ["Continue"];
+				optActions = [37];
+				break;
+			case 41:
+				desc.innerHTML = "Running program: AdventuR...";
+				prompt.innerHTML = "";
+				restartGame = true;
+				break;
 			default:console.log("default");return;
 	    }
 	    for(var i=0; i<6; i++){
@@ -287,10 +424,15 @@ $(document).ready(function(){
 	    		choice[i].innerHTML = "";
 	    	}
 	    }
+	    if (restartGame){
+	    	restartGame()
+	    }
 	}
 	for(let i = 0; i < choice.length; i++){
     	choice[i].addEventListener("click",doThings);
     }
-	doThings({target: {goto: 99}});
 
+
+
+	startGame();
 })
