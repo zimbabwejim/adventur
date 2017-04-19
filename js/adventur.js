@@ -16,6 +16,7 @@ $(document).ready(function(){
     var desc = $("#desc")[0];
     var prompt = $("#prompt")[0];
     var choice = [$("#choice1")[0],$("#choice2")[0],$("#choice3")[0],$("#choice4")[0],$("#choice5")[0],$("#choice6")[0]];
+
     var haveLegs = true;
     var haveKey = false;
     var customer = false;
@@ -31,7 +32,8 @@ $(document).ready(function(){
     var owlExt = false; //probs won't be used
     // var optActions = [];
 	var doThings = function(input){
-		console.log("starting doThings with "+input);
+		console.log("starting doThings with "+input.target.goto);
+		input = input.target.goto;
 		var optActions = [];
 	    switch(input){
 			case 99:
@@ -78,22 +80,22 @@ $(document).ready(function(){
 				break;
 			case 10:
 				break;
-			default:console.log("default");
+			default:console.log("default");return;
 	    }
 	    for(var i=0; i<6; i++){
-
 	    	if (opts[i]){
-	    		console.log(optActions);
-	    		choice[i].innerHTML = opts[i];
 	    		console.log("choicing "+i);
-	    		let action = optActions[i];
-	    		choice[i].addEventListener("click", function(){doThings(action)});
+	    		choice[i].innerHTML = opts[i];
+	    		let action = optActions[i];//damn var referencing location and not value
+	    		choice[i].goto = action;
 	    	}else{
 	    		choice[i].innerHTML = "";
 	    	}
 	    }
 	}
-
-	doThings(99);
+	for(let i = 0; i < choice.length; i++){
+    	choice[i].addEventListener("click",doThings);
+    }
+	doThings({target: {goto: 99}});
 
 })
