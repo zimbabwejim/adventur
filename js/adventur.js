@@ -1,14 +1,11 @@
 $(document).ready(function(){
 	var playerDisplay = $("#player")[0];
     var ptx = playerDisplay.getContext("2d");
-    var pw = $("#player").width();
-    var ph = $("#player").height();
+    var pi = Math.PI;
     var mapDisplay = $("#minimap")[0];
     var mtx = mapDisplay.getContext("2d");
     var mw = $("#minimap").width();
     var mh = $("#minimap").height();
-    ptx.fillStyle = "blue";
-    ptx.fillRect(0, 0, pw, ph);
     mtx.fillStyle = "chartreuse";
     mtx.fillRect(0, 0, mw, mh);
     var desc = $("#desc")[0];
@@ -37,6 +34,7 @@ $(document).ready(function(){
 
 	var doThings = function(input){
 		console.log("starting doThings with "+input.target.goto);
+		drawPlayer();
 		input = input.target.goto;
 		var optActions = [];
 		var opts = [];
@@ -416,7 +414,7 @@ $(document).ready(function(){
 	    }
 	    for(var i=0; i<6; i++){
 	    	if (opts[i]){
-	    		console.log("choicing "+i);
+	    		// console.log("choicing "+i);
 	    		choice[i].innerHTML = opts[i];
 	    		let action = optActions[i];//damn var referencing location and not value
 	    		choice[i].goto = action;
@@ -432,7 +430,52 @@ $(document).ready(function(){
     	choice[i].addEventListener("click",doThings);
     }
 
+    var drawPlayer = function(){
+    	var pw = playerDisplay.width;
+    	var ph = playerDisplay.height;
+    	ptx.fillStyle = "grey";
+	    ptx.fillRect(0, 0, pw, ph);
+	    ptx.fillStyle = "black";
+	    //head
+	    ptx.arc(pw/2,ph/3,20,0,2*pi);
+	    ptx.fill();
+	    //body
+	    ptx.fillRect(pw/2-3,ph/3,6,ph/5);
+	    if(haveLegs){
+		    //legs
+		    ptx.translate(pw/2,8/15*ph);
+		    ptx.rotate(pi/8);
+		    ptx.fillRect(0,0,-6,60);
+		    ptx.fillRect(0,0,-6,-5);
+		    ptx.rotate(-pi/4);
+		    ptx.fillRect(0,0,6,60);
+		    ptx.fillRect(0,0,6,-5);
+		    ptx.rotate(pi/8);
+		}
+	    //arms
+	    ptx.translate(0,-2/15*ph);
+	    ptx.lineWidth = 7;
+	    ptx.moveTo(0,0);
+	    ptx.lineTo(40,40);
+	    ptx.stroke();
+	    ptx.moveTo(0,0);
+	    ptx.lineTo(-40,40);
+	    ptx.rotate(pi/6);
+	    ptx.fillRect(2,0,-6,40);
+	    ptx.rotate(-pi/3);
+	    // ptx.fillRect(-2,0,6,40);
+	    ptx.rotate(pi/6);
 
+
+	    /*ptx.beginPath();
+	    ptx.moveTo(pw/2-3,7/12*ph);
+	    ptx.lineTo(pw/2-20,7/12*ph+40);
+	    ptx.lineTo(pw/2-15,7/12*ph+40);
+	    ptx.lineTo(pw/2,7/12*ph);
+	    ptx.fill();*/
+
+	    // console.log(playerDisplay.width,playerDisplay.height,playerDisplay.clientWidth,playerDisplay.clientHeight);
+    }
 
 	startGame();
 })
