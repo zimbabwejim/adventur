@@ -1,36 +1,37 @@
 $(document).ready(function(){
 	var playerDisplay = $("#player")[0];
-    var ptx = playerDisplay.getContext("2d");
-    var pi = Math.PI;
-    var mapDisplay = $("#minimap")[0];
-    var mtx = mapDisplay.getContext("2d");
-    var mw = $("#minimap").width();
-    var mh = $("#minimap").height();
-    mtx.fillStyle = "chartreuse";
-    mtx.fillRect(0, 0, mw, mh);
-    var desc = $("#desc")[0];
-    var prompt = $("#prompt")[0];
-    var choice = [$("#choice1")[0],$("#choice2")[0],$("#choice3")[0],$("#choice4")[0],$("#choice5")[0],$("#choice6")[0]];
-    var haveLegs = true;
-    var haveKey = false;
-    var customer = false;
-    var haveBeef = false;
-    var gold = 0;
-    var strength = 0;
-    var haveSword = false;
-    var haveHammer = false;
-    var haveFlask = false;
-    var owlAlive = true;
-    var haveDoorknob = false;
-    var owlFound = false;
-    var startGame = function(){
-    	//stuff
-    	doThings({target: {goto: 99}});
-    }
+	var ptx = playerDisplay.getContext("2d");
+	var pi = Math.PI;
+	var mapDisplay = $("#minimap")[0];
+	var mtx = mapDisplay.getContext("2d");
+	var mw = $("#minimap").width();
+	var mh = $("#minimap").height();
+	mtx.fillStyle = "chartreuse";
+	mtx.fillRect(0, 0, mw, mh);
+	var desc = $("#desc")[0];
+	var prompt = $("#prompt")[0];
+	var choice = [$("#choice1")[0],$("#choice2")[0],$("#choice3")[0],$("#choice4")[0],$("#choice5")[0]];
+	var haveLegs = true;
+	var haveKey = false;
+	var customer = false;
+	var haveBeef = false;
+	var robotArm = false;
+	var gold = 0;
+	var strength = 0;
+	var haveSword = false;
+	var haveHammer = false;
+	var haveFlask = false;
+	var owlAlive = true;
+	var haveDoorknob = false;
+	var owlFound = false;
+	var startGame = function(){
+		//stuff
+		doThings({target: {goto: 99}});
+	}
 
-    var restartGame = function(){
-    	//otherstuff
-    }
+	var restartGame = function(){
+		//otherstuff
+	}
 
 	var doThings = function(input){
 		console.log("starting doThings with "+input.target.goto);
@@ -38,12 +39,12 @@ $(document).ready(function(){
 		input = input.target.goto;
 		var optActions = [];
 		var opts = [];
-	    switch(input){
+		switch(input){
 			case 99:
 				desc.innerHTML = "Ye are in a tavern";
 				prompt.innerHTML = "What do ye do?";
-				opts = ["Go to ye table","Go to ye man","Walk outside","Visit bar","Visit bathroom","Approach elevator"]; //probably remove visit bathroom
-				optActions = [1,2,3,4,10,29];
+				opts = ["Go to ye table","Go to ye man","Walk outside","Visit bar","Approach elevator"]; //probably remove visit bathroom
+				optActions = [1,2,3,4,29];
 				break;
 
 			case 1:
@@ -234,7 +235,6 @@ $(document).ready(function(){
 					prompt.innerHTML = "Ye see a dragon";
 					opts = ["Fight","Sneak out"];
 					optActions = [22,23];
-					strength++;
 				}
 				opts = ["Continue"];
 				break;
@@ -279,16 +279,17 @@ $(document).ready(function(){
 				break;
 			case 26:
 				desc.innerHTML = "Ye approach the statue.";
-				if (beefiness){
+				if (haveBeef){
 					prompt.innerHTML = "Ye Beowulf statue likes ye shiny";
 					optActions = [24];
 				}else if (haveSword){
 					prompt.innerHTML = "Ye Beowulf statue takes ye sword and gives ye beefiness";
 					haveSword = false;
-					beefiness = true;
+					haveBeef = true;
 					optActions = [24];
 				}else{
 					prompt.innerHTML = "Ye have nothing to offer and ye statue rips ye arm off.<br>Ye wake up in ye tavern with a robotic arm.";
+					robotArm = true;
 					optActions = [99];
 				}
 				opts = ["Continue"];
@@ -411,71 +412,87 @@ $(document).ready(function(){
 				restartGame = true;
 				break;
 			default:console.log("default");return;
-	    }
-	    for(var i=0; i<6; i++){
-	    	if (opts[i]){
-	    		// console.log("choicing "+i);
-	    		choice[i].innerHTML = opts[i];
-	    		let action = optActions[i];//damn var referencing location and not value
-	    		choice[i].goto = action;
-	    	}else{
-	    		choice[i].innerHTML = "";
-	    	}
-	    }
-	    if (restartGame){
-	    	restartGame()
-	    }
+		}
+		for(var i=0; i<choice.length; i++){
+			if (opts[i]){
+				// console.log("choicing "+i);
+				choice[i].innerHTML = opts[i];
+				let action = optActions[i];//damn var referencing location and not value
+				choice[i].goto = action;
+			}else{
+				choice[i].innerHTML = "";
+			}
+		}
+		if (restartGame){
+			restartGame()
+		}
 	}
 	for(let i = 0; i < choice.length; i++){
-    	choice[i].addEventListener("click",doThings);
-    }
+		choice[i].addEventListener("click",doThings);
+	}
 
-    var drawPlayer = function(){
-    	var pw = playerDisplay.width;
-    	var ph = playerDisplay.height;
-    	ptx.fillStyle = "grey";
-	    ptx.fillRect(0, 0, pw, ph);
-	    ptx.fillStyle = "black";
-	    //head
-	    ptx.arc(pw/2,ph/3,20,0,2*pi);
-	    ptx.fill();
-	    //body
-	    ptx.fillRect(pw/2-3,ph/3,6,ph/5);
-	    if(haveLegs){
-		    //legs
-		    ptx.translate(pw/2,8/15*ph);
-		    ptx.rotate(pi/8);
-		    ptx.fillRect(0,0,-6,60);
-		    ptx.fillRect(0,0,-6,-5);
-		    ptx.rotate(-pi/4);
-		    ptx.fillRect(0,0,6,60);
-		    ptx.fillRect(0,0,6,-5);
-		    ptx.rotate(pi/8);
+	var drawPlayer = function(){
+		var pw = playerDisplay.width;
+		var ph = playerDisplay.height;
+		let armOffset = 0;
+		ptx.fillStyle = "grey";
+		ptx.fillRect(0, 0, pw, ph);
+		ptx.fillStyle = "black";
+		ptx.lineWidth = 7;
+		//head
+		ptx.beginPath();
+		ptx.arc(pw/2,ph/3,20,0,2*pi);
+		ptx.fill();
+		//legs
+		if(haveLegs){
+			ptx.translate(pw/2,8/15*ph);
+			ptx.beginPath();
+			ptx.moveTo(0,0);
+			ptx.lineTo(25,60);
+			ptx.moveTo(0,0);
+			ptx.lineTo(-25,60);
+			ptx.stroke();
+			ptx.translate(-pw/2,-8/15*ph);
 		}
-	    //arms
-	    ptx.translate(0,-2/15*ph);
-	    ptx.lineWidth = 7;
-	    ptx.moveTo(0,0);
-	    ptx.lineTo(40,40);
-	    ptx.stroke();
-	    ptx.moveTo(0,0);
-	    ptx.lineTo(-40,40);
-	    ptx.rotate(pi/6);
-	    ptx.fillRect(2,0,-6,40);
-	    ptx.rotate(-pi/3);
-	    // ptx.fillRect(-2,0,6,40);
-	    ptx.rotate(pi/6);
+		//arms
+		ptx.translate(pw/2,6/15*ph);
+		if(haveBeef){
+			armOffset = 20;
+		}
+		ptx.beginPath();
+		ptx.arc(20+armOffset,20,5*strength,pi/4,-3*pi/4,true);
+		ptx.fill();
+		ptx.beginPath();
+		ptx.moveTo(armOffset,0);
+		ptx.lineTo(40+armOffset,40);
+		ptx.stroke();
+		if(robotArm){
+			ptx.strokeStyle = "darkgrey";
+			ptx.fillStyle = "darkgrey";
+		}
+		ptx.beginPath();
+		ptx.arc(-20-armOffset,20,5*strength,-pi/4,3*pi/4,true);
+		ptx.fill();
+		ptx.beginPath();
+		ptx.moveTo(-armOffset,0);
+		ptx.lineTo(-40-armOffset,40);
+		ptx.stroke();
+		ptx.strokeStyle = "black";
+		ptx.fillStyle = "black";
+		//beef
+		ptx.beginPath();
+		ptx.moveTo(-armOffset-2,-2);
+		ptx.lineTo(0,ph/8);
+		ptx.lineTo(armOffset+2,-2);
+		ptx.lineTo(-armOffset-2,-2);
+		ptx.fill();
+		ptx.translate(-pw/2,-6/15*ph);
 
+		//body
 
-	    /*ptx.beginPath();
-	    ptx.moveTo(pw/2-3,7/12*ph);
-	    ptx.lineTo(pw/2-20,7/12*ph+40);
-	    ptx.lineTo(pw/2-15,7/12*ph+40);
-	    ptx.lineTo(pw/2,7/12*ph);
-	    ptx.fill();*/
-
-	    // console.log(playerDisplay.width,playerDisplay.height,playerDisplay.clientWidth,playerDisplay.clientHeight);
-    }
+		ptx.fillRect(pw/2-3,ph/3,6,ph/5);
+		// console.log(playerDisplay.width,playerDisplay.height,playerDisplay.clientWidth,playerDisplay.clientHeight);
+	}
 
 	startGame();
 })
