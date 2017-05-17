@@ -29,7 +29,9 @@ description {
 	top: 33%;
 	left: 20%;
 	text-indent: 5%;
-	width: 60%
+	width: 80%;
+	height: 67%;
+	background: #666;
 }
 
 prompt {

@@ -11,27 +11,39 @@ $(document).ready(function(){
 	var desc = $("#desc")[0];
 	var prompt = $("#prompt")[0];
 	var choice = [$("#choice1")[0],$("#choice2")[0],$("#choice3")[0],$("#choice4")[0],$("#choice5")[0]];
-	var haveLegs = true;
-	var haveKey = false;
-	var customer = false;
-	var haveBeef = false;
-	var robotArm = false;
-	var gold = 0;
-	var strength = 0;
-	var haveSword = false;
-	var haveHammer = false;
-	var haveFlask = false;
-	var owlAlive = true;
-	var haveDoorknob = false;
-	var owlFound = false;
+	var haveLegs;
+	var haveKey;
+	var customer;
+	var haveBeef;
+	var robotArm;
+	var gold;
+	var strength;
+	var haveSword;
+	var haveHammer;
+	var haveFlask;
+	var owlAlive;
+	var haveDoorknob;
+	var owlFound;
+	var restartGame;
 	var startGame = function(){
-		//stuff
+		haveLegs = true;
+		haveKey = false;
+		customer = false;
+		haveBeef = false;
+		robotArm = false;
+		gold = 0;
+		strength = 0;
+		haveSword = false;
+		haveHammer = false;
+		haveFlask = false;
+		owlAlive = true;
+		haveDoorknob = false;
+		owlFound = false;
+		restartGame = false;
 		doThings({target: {goto: 99}});
 	}
 
-	var restartGame = function(){
-		//otherstuff
-	}
+
 
 	var doThings = function(input){
 		console.log("starting doThings with "+input.target.goto);
@@ -39,11 +51,15 @@ $(document).ready(function(){
 		input = input.target.goto;
 		var optActions = [];
 		var opts = [];
+		if (restartGame){
+			startGame();
+			return;
+		}
 		switch(input){
 			case 99:
 				desc.innerHTML = "Ye are in a tavern";
 				prompt.innerHTML = "What do ye do?";
-				opts = ["Go to ye table","Go to ye man","Walk outside","Visit bar","Approach elevator"]; //probably remove visit bathroom
+				opts = ["Go to ye table","Go to ye man","Walk outside","Visit bar","Approach elevator"];
 				optActions = [1,2,3,4,29];
 				break;
 
@@ -348,7 +364,7 @@ $(document).ready(function(){
 				desc.innerHTML = "Ye walk out of the elevator.";
 				prompt.innerHTML = "Ye be upstairs.";
 				opts = ["Roll out window","Talk to men","Use door","Go back"];
-				optActions = [33,34,36,99];
+				optActions = [33,35,36,99];
 				break;
 			case 33:
 				desc.innerHTML = "Ye roll out the window.";
@@ -357,7 +373,6 @@ $(document).ready(function(){
 				optActions = [3];
 				break;
 			case 34://supposed to be walk up to men/talk to men
-				break;
 			case 35:
 				desc.innerHTML = "Ye talk to the men.";
 				if (!owlAlive){
@@ -369,7 +384,7 @@ $(document).ready(function(){
 					prompt.innerHTML = "Men: We're <i>owl</i> exterminators.<br>The men ignore ye.";
 				}
 				opts = ["Continue"];
-				optActions = [34];
+				optActions = [32];
 				break;
 			case 36:
 				desc.innerHTML = "Ye use the door.";
@@ -410,6 +425,8 @@ $(document).ready(function(){
 				desc.innerHTML = "Running program: AdventuR...";
 				prompt.innerHTML = "";
 				restartGame = true;
+				opts = ["Continue"];
+				optActions = [41];
 				break;
 			default:console.log("default");return;
 		}
@@ -422,9 +439,6 @@ $(document).ready(function(){
 			}else{
 				choice[i].innerHTML = "";
 			}
-		}
-		if (restartGame){
-			restartGame()
 		}
 	}
 	for(let i = 0; i < choice.length; i++){
