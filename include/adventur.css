@@ -34,6 +34,26 @@ description {
 	background: #666;
 }
 
+log {
+	position: fixed;
+	right: 0px;
+	bottom: 0px;
+	width: 20%;
+	height: 67%;
+	background: white;
+	overflow: scroll;
+}
+
+textlog {
+	position: relative;
+	left: 10%;
+}
+
+#clearButton {
+	position: absolute;
+	right: 10%;
+}
+
 prompt {
 	text-indent: 10%;
 	

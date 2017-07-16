@@ -11,6 +11,8 @@ $(document).ready(function(){
 	var desc = $("#desc")[0];
 	var prompt = $("#prompt")[0];
 	var choice = [$("#choice1")[0],$("#choice2")[0],$("#choice3")[0],$("#choice4")[0],$("#choice5")[0]];
+	var log = document.getElementById("gameLog");
+	$("#clearButton")[0].addEventListener("click", function(){log.innerHTML = ""});
 	var haveLegs;
 	var haveKey;
 	var customer;
@@ -40,14 +42,16 @@ $(document).ready(function(){
 		haveDoorknob = false;
 		owlFound = false;
 		restartGame = false;
-		doThings({target: {goto: 99}});
+		doThings({target: {goto: 99, innerHTML: ""}});
 	}
 
 
 
 	var doThings = function(input){
 		console.log("starting doThings with "+input.target.goto);
+		console.log(input.target.innerHTML);
 		drawPlayer();
+		log.innerHTML = log.innerHTML + input.target.innerHTML + "<br>";
 		input = input.target.goto;
 		var optActions = [];
 		var opts = [];
